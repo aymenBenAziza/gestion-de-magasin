@@ -1,4 +1,4 @@
-package tn.tuniprob.gestionmagasin;
+package tn.tuniprod.gestionmagasin;
 
 public class Employe {
     private int identifiant;
@@ -6,15 +6,7 @@ public class Employe {
     private String adresse;
     private int nbrHeures;
 
-    // Constructeur
-    public Employe(int identifiant, String nom, String adresse, int nbrHeures) {
-        this.identifiant = identifiant;
-        this.nom = nom;
-        this.adresse = adresse;
-        this.nbrHeures = nbrHeures;
-    }
-
-    // Getters and setters
+    // Constructeurs, getters et setters
 
     public int getIdentifiant() {
         return identifiant;
@@ -48,8 +40,15 @@ public class Employe {
         this.nbrHeures = nbrHeures;
     }
 
-    // Méthode pour calculer le salaire
+    // Méthode pour calculer le salaire (à implémenter dans les sous-classes)
     public double calculerSalaire() {
-        return nbrHeures * 5; // Salaire de base à 5DT/H
+        // À compléter dans les sous-classes
+        return 0.0;
+    }
+
+    // Méthode pour afficher les détails de l'employé
+    @Override
+    public String toString() {
+        return "Identifiant: " + identifiant + ", Nom: " + nom + ", Adresse: " + adresse + ", Nbr Heures: " + nbrHeures;
     }
 }
