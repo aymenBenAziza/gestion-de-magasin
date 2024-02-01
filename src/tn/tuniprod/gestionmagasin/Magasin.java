@@ -1,27 +1,19 @@
 package tn.tuniprod.gestionmagasin;
+import java.sql.SQLException;
 import java.util.ArrayList;
 public class Magasin {
     private int identifiant;
     private String nom;
     private String adresse;
     private int capacite;
-    private ArrayList<Produit> produits;
-    private ArrayList<Employe> employes;
+    private ArrayList<Produit> produits = new ArrayList<>();
+    private ArrayList<Employe> employes = new ArrayList<>();
 
     // Constructeurs, getters et setters
-
-    // Constructeur par défaut
-    public Magasin() {
-        // Initialisation des listes
-        this.produits = new ArrayList<>();
-        this.employes = new ArrayList<>();
-    }
 
     // Constructeur avec toutes les caractéristiques
     public Magasin(int identifiant, String nom, String adresse, int capacite) {
         // Appel au constructeur par défaut
-        this();
-
         this.identifiant = identifiant;
         this.nom = nom;
         this.adresse = adresse;
@@ -55,7 +47,6 @@ public class Magasin {
     public void setCapacite(int capacite) {
         this.capacite = capacite;
     }
-
     public ArrayList<Produit> getProduits() {
         return produits;
     }
@@ -63,7 +54,12 @@ public class Magasin {
     public void setProduits(ArrayList<Produit> produits) {
         this.produits = produits;
     }
-
+    public ArrayList<Employe> getEmployes() {
+        return this.employes;
+    }
+    public void setEmployes(ArrayList<Employe> employes){
+        this.employes = employes;
+    }
     // Autres méthodes comme ajouterProduit(), comparer(), chercherProduit(), etc.
 
     // Méthode pour retourner le nombre total de produits dans le magasin
@@ -127,9 +123,9 @@ public class Magasin {
         return (magasin1.getNombreProduits() > magasin2.getNombreProduits()) ? magasin1 : magasin2;
     }
 
-    public void ajouterEmploye(Employe employe) {
-        if (employes.size() < 20) {
-            employes.add(employe);
+    public void ajouterEmploye(Employe employe) throws SQLException {
+        if (this.employes.size() < 20) {
+            employes.add(employe); // Add the employee to the list only if upload is successful
             System.out.println("Employé ajouté au magasin.");
         } else {
             System.out.println("Erreur : Capacité maximale d'employés atteinte.");

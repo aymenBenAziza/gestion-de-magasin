@@ -6,6 +6,8 @@ public class Employe {
     private String adresse;
     private int nbrHeures;
 
+
+
     // Constructeurs, getters et setters
 
     public int getIdentifiant() {

@@ -1,10 +1,24 @@
 package tn.tuniprod.gestionmagasin;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         Magasin magasin = new Magasin(1, "SuperMagasin", "AdresseMagasin", 50);
+        DataBaseConnection db = new DataBaseConnection();
+        db.downloadEmploye(magasin);
+        db.downloadProduit(magasin);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                db.uploadEmploye(magasin);
+                db.uploadProduit(magasin);
+                System.out.println("Data uploaded before exit.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }));
 
         while (true) {
             System.out.println("\n====== Menu ======");
@@ -24,7 +38,6 @@ public class Main {
                     break;
                 case 2:
                     manageEmployeesMenu(scanner, magasin);
-                    break;
                 case 3:
                     System.out.println("Caractéristiques du magasin: " + magasin);
                     magasin.afficherCaracteristiques();
@@ -36,13 +49,11 @@ public class Main {
                 case 5:
                     System.out.println("Au revoir!");
                     System.exit(0); // Exit the program
-                    break;
                 default:
                     System.out.println("Choix invalide. Veuillez choisir un nombre entre 1 et 5.");
             }
         }
     }
-
     private static void manageProductsMenu(Scanner scanner, Magasin magasin) {
         Produit produit = new Produit();
         while (true) {
@@ -62,26 +73,52 @@ public class Main {
                     System.out.println("Ajouter un produit...");
                     System.out.print("id: ");
                     produit.setId(scanner.nextInt());
-                    scanner.nextLine(); // Consume the newline character
+                    scanner.nextLine();
                     System.out.print("libelle: ");
                     produit.setLibelle(scanner.nextLine());
                     System.out.print("type: ");
                     produit.setType(scanner.nextLine());
                     System.out.print("quantite: ");
                     produit.setQuantite(scanner.nextDouble());
+                    scanner.nextLine();
                     System.out.print("prix: ");
                     produit.setPrix(scanner.nextDouble());
-                    // Call a method to add a product
                     magasin.ajouterProduit(produit);
                     break;
                 case 2:
                     System.out.println("Supprimer un produit...");
-                    // Call a method to delete a product
-                    magasin.supprimerProduit(produit);
+                    System.out.println("id: ");
+                    int id = scanner.nextInt();
+                    magasin.getProduits().remove(id);
                     break;
                 case 3:
+                    System.out.println("id: ");
+                    int ID = scanner.nextInt();
                     System.out.println("Mettre à jour un produit...");
-                    // Call a method to update a product
+                    System.out.println("1. id");
+                    System.out.println("2. libelle");
+                    System.out.println("3. quantite");
+                    System.out.println("4. prix");
+                    System.out.print("choix: ");
+                    int choix = scanner.nextInt();
+                    switch (choix){
+                        case 1:
+                            System.out.print("id: ");
+                            magasin.getProduits().get(ID).setId(scanner.nextInt());
+                            break;
+                        case 2:
+                            System.out.print("libelle: ");
+                            magasin.getProduits().get(ID).setLibelle(scanner.nextLine());
+                        case 3:
+                            System.out.print("type: ");
+                            magasin.getProduits().get(ID).setType(scanner.nextLine());
+                        case 4:
+                            System.out.print("quantite: ");
+                            magasin.getProduits().get(ID).setQuantite(scanner.nextDouble());
+                        case 5:
+                            System.out.print("prix: ");
+                            magasin.getProduits().get(ID).setPrix(scanner.nextDouble());
+                    }
                     break;
                 case 4:
                     return; // Return to the main menu
@@ -90,16 +127,14 @@ public class Main {
             }
         }
     }
-
-    private static void manageEmployeesMenu(Scanner scanner, Magasin magasin) {
-        Employe emp = new Employe();
+    private static void manageEmployeesMenu(Scanner scanner, Magasin magasin) throws SQLException {
         while (true) {
+            Employe emp = new Employe();
             System.out.println("\n====== Gérer les employés ======");
             System.out.println("1. Ajouter un employé");
             System.out.println("2. Supprimer un employé");
             System.out.println("3. Mettre à jour un employé");
             System.out.println("4. Retour au menu principal");
-
             System.out.print("Choix: ");
             int employeeChoice = scanner.nextInt();
             scanner.nextLine(); // Consume the newline character
@@ -121,7 +156,7 @@ public class Main {
                     System.out.print("nombre d'heures par mois: ");
                     emp.setNbrHeures(scanner.nextInt());
 
-                    // Call a method to add an employee
+                    // Call a method to add an employeemagasin.ajouterEmploye(emp);
                     magasin.ajouterEmploye(emp);
                     break;
                 case 2:
@@ -133,6 +168,7 @@ public class Main {
                     // Call a method to update an employee
                     break;
                 case 4:
+                    
                     return; // Return to the main menu
                 default:
                     System.out.println("Choix invalide. Veuillez choisir un nombre entre 1 et 4.");
